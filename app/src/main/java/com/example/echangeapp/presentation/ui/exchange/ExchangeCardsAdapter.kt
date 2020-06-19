@@ -2,6 +2,7 @@ package com.example.echangeapp.presentation.ui.exchange
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.echangeapp.R
 import com.example.echangeapp.databinding.ListItemCardBinding
@@ -23,21 +24,27 @@ class ExchangeCardsAdapter(private val amountChangedCallback: (String, ExchangeC
         set(value) {
             val old = field
             field = value
-            for ((index, item) in old.withIndex()) {
-                if (index < value.size && item != value[index]) {
-                    notifyItemChanged(index)
+            DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return old[oldItemPosition] == value[newItemPosition]
                 }
-            }
-            if (old.size > value.size) {
-                for (i in value.size until old.size) {
-                    notifyItemRemoved(i)
+
+                override fun getOldListSize(): Int {
+                    return old.size
                 }
-            }
-            if (value.size > old.size) {
-                for (i in old.size until value.size) {
-                    notifyItemInserted(i)
+
+                override fun getNewListSize(): Int {
+                    return value.size
                 }
-            }
+
+                override fun areContentsTheSame(
+                    oldItemPosition: Int,
+                    newItemPosition: Int
+                ): Boolean {
+                    return old[oldItemPosition] == value[newItemPosition]
+                }
+
+            }).dispatchUpdatesTo(this)
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExchangeCardViewHolder {
