@@ -45,11 +45,15 @@ class ExchangeViewModel(
 
     private fun init() {
         viewModelScope.launch {
-            val result = loadExchangeRatesUseCase.execute()
-            for (rate in result) {
-                rates[rate.base] = rate
+            try {
+                val result = loadExchangeRatesUseCase.execute()
+                for (rate in result) {
+                    rates[rate.base] = rate
+                }
+                reloadScreen()
+            } catch (e: Exception) {
+                //TODO
             }
-            reloadScreen()
         }
     }
 

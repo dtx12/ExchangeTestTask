@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Echange App.iml" filepath="$PROJECT_DIR$/Echange App.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ExchangeTestTask-master-Echange App.iml" filepath="$PROJECT_DIR$/ExchangeTestTask-master-Echange App.iml" group="Echange App" />
-      <module fileurl="file://$PROJECT_DIR$/app/ExchangeTestTask-master-app.iml" filepath="$PROJECT_DIR$/app/ExchangeTestTask-master-app.iml" group="Echange App/app" />
+      <module fileurl="file://$PROJECT_DIR$/ExchangeTestTask-Echange App.iml" filepath="$PROJECT_DIR$/ExchangeTestTask-Echange App.iml" group="Echange App" />
+      <module fileurl="file://$PROJECT_DIR$/app/ExchangeTestTask-app.iml" filepath="$PROJECT_DIR$/app/ExchangeTestTask-app.iml" group="Echange App/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
