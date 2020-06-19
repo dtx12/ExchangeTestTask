@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Exchange</string>
+    <string name="you_have_format">You have %1$s%2$s</string>
+    <string name="exchange_rate_format">%1$s1 = %2$s%3$s</string>
+    <string name="transaction_completed">Transaction completed</string>
+    <string name="insufficient_funds">Insufficient funds</string>
+    <string name="exchange">Exchange</string>
+</resources>
