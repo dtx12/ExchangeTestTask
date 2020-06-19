@@ -9,9 +9,9 @@ import com.example.echangeapp.domain.CurrencyFormatter
 import com.example.echangeapp.domain.models.Currency
 import com.example.echangeapp.domain.models.ExchangeRate
 import com.example.echangeapp.domain.models.symbol
-import com.example.echangeapp.domain.usecases.ExchangeCurrencyUseCase
 import com.example.echangeapp.domain.usecases.LoadExchangeRatesUseCase
 import com.example.echangeapp.domain.usecases.ReadAvailableCurrencyAmountUseCase
+import com.example.echangeapp.domain.usecases.UpdateAvailableCurrencyAmountUseCase
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -19,7 +19,7 @@ import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class ExchangeViewModel(
-    private val exchangeCurrencyUseCase: ExchangeCurrencyUseCase,
+    private val updateAvailableCurrencyAmountUseCase: UpdateAvailableCurrencyAmountUseCase,
     private val readAvailableCurrencyAmountUseCase: ReadAvailableCurrencyAmountUseCase,
     private val loadExchangeRatesUseCase: LoadExchangeRatesUseCase
 ): ViewModel() {
@@ -81,12 +81,24 @@ class ExchangeViewModel(
     }
 
     fun exchangeCurrency() {
-        if (exchangeCurrencyUseCase.execute(enteredAmount, rates[yourCurrency]!!, rates[requiredCurrency]!!)) {
-            enteredAmount = BigDecimal.ZERO
-            _exchangeSuccessEvent.value = OneTimeEvent(Unit)
-        } else {
+        val requiredCurrencyRate = rates[requiredCurrency]!!
+        val currencyLeft = readAvailableCurrencyAmountUseCase.execute(yourCurrency)
+        if (currencyLeft.amount < enteredAmount) {
             _exchangeFailEvent.value = OneTimeEvent(Unit)
+            return
         }
+        val exchangedCurrency = currencyLeft.amount.minus(enteredAmount)
+        updateAvailableCurrencyAmountUseCase.execute(currencyLeft.copy(amount = exchangedCurrency))
+        val targetCurrencyAmount = readAvailableCurrencyAmountUseCase.execute(requiredCurrency)
+        val receivedCurrency = enteredAmount
+            .divide(
+                requiredCurrencyRate.rates[yourCurrency]
+                    ?: BigDecimal.ONE, 2, RoundingMode.DOWN
+            )
+            .plus(targetCurrencyAmount.amount)
+        updateAvailableCurrencyAmountUseCase.execute(targetCurrencyAmount.copy(amount = receivedCurrency))
+        enteredAmount = BigDecimal.ZERO
+        _exchangeSuccessEvent.value = OneTimeEvent(Unit)
         reloadScreen()
     }
 
