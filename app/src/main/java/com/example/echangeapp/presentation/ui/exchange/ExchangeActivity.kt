@@ -87,10 +87,14 @@ class ExchangeActivity : AppCompatActivity() {
             displayMainScreenModel(it)
         })
         viewModel.exchangeSuccessEvent.observe(this, Observer {
-            displayTransactionCompleted()
+            if (it.value != null) {
+                displayTransactionCompleted()
+            }
         })
         viewModel.exchangeFailEvent.observe(this, Observer {
-            displayTransactionError()
+            if (it.value != null) {
+                displayTransactionError()
+            }
         })
     }
 
